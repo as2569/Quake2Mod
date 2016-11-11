@@ -1192,6 +1192,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	int			damage = 4;
 	int			kick = 8;
 
+	
 	if (ent->client->ps.gunframe == 9)
 	{
 		ent->client->ps.gunframe++;
@@ -1232,10 +1233,16 @@ void weapon_shotgun_fire (edict_t *ent)
 
 void Weapon_Shotgun (edict_t *ent)
 {
-	static int	pause_frames[]	= {22, 28, 34, 0};
-	static int	fire_frames[]	= {8, 9, 0};
+	//spryszynski removing frames does nothing
+	//static int	pause_frames[]	= {22, 28, 34, 0};
+	//static int	fire_frames[]	= {8, 9, 0};
+
+	//Weapon_Generic (ent, 7, 18, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
+	static int	pause_frames[]	= {23, 34, 0};
+	static int	fire_frames[]	= {4, 5, 0};
 
 	Weapon_Generic (ent, 7, 18, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
+	gi.dprintf("removed frames\n");
 }
 
 

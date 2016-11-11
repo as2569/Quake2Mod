@@ -62,6 +62,10 @@
       <BaseAddress>0x20000000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
+    <PostBuildEvent>
+      <Command>
+call "$(SolutionDir)$(Configuration)\move.bat" "$(SolutionDir)libs\RLPL.Services.CertificateValidator.Common.dll" "$(TargetDir)RLPL.Services.CertificateValidator.Common.dll"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
