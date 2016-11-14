@@ -864,7 +864,7 @@ void SP_func_explosive (edict_t *self)
 	gi.linkentity (self);
 }
 
-
+//spryszynski looke
 /*QUAKED misc_explobox (0 .5 .8) (-16 -16 0) (16 16 40)
 Large exploding box.  You can override its mass (100),
 health (80), and dmg (150).
@@ -970,7 +970,7 @@ void barrel_delay (edict_t *self, edict_t *inflictor, edict_t *attacker, int dam
 	self->think = barrel_explode;
 	self->activator = attacker;
 }
-
+//spryszynski I think its barrel
 void SP_misc_explobox (edict_t *self)
 {
 	if (deathmatch->value)

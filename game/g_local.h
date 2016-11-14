@@ -905,6 +905,7 @@ struct gclient_s
 
 	// sum up damage over an entire frame, so
 	// shotgun blasts give a single big kick
+
 	int			damage_armor;		// damage absorbed by armor
 	int			damage_parmor;		// damage absorbed by power armor
 	int			damage_blood;		// damage taken out of health

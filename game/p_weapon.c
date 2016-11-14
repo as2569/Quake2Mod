@@ -999,21 +999,21 @@ void Machinegun_Fire (edict_t *ent)
 
 	//spryszynski 
 	//code to disable deathmatch check for recoil
-	// raise the gun as it is firing
-	//if (!deathmatch->value)
-	//{
-		//recoil limited to 9 shots
+	//raise the gun as it is firing
+
+		//recoil limited to 12 shots
 		ent->client->machinegun_shots++;
 		if (ent->client->machinegun_shots > 12)
 			ent->client->machinegun_shots = 12;
-	//}
-	//spryszynski double the spread
+
+
+	//spryszynski spread*1.5
 	// get start / end positions
 	VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
 	AngleVectors (angles, forward, right, NULL);
 	VectorSet(offset, 0, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD*2, DEFAULT_BULLET_VSPREAD*2, MOD_MACHINEGUN);
+	fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD*1.5, DEFAULT_BULLET_VSPREAD*1.5, MOD_MACHINEGUN);
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
@@ -1143,7 +1143,6 @@ void Chaingun_Fire (edict_t *ent)
 
 	for (i=0 ; i<shots ; i++)
 	{
-		//spryszynski double the spread
 		// get start / end positions
 		AngleVectors (ent->client->v_angle, forward, right, up);
 		r = 7 + crandom()*4;
@@ -1151,7 +1150,7 @@ void Chaingun_Fire (edict_t *ent)
 		VectorSet(offset, 0, r, u + ent->viewheight-8);
 		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-		fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD*2, DEFAULT_BULLET_VSPREAD*2, MOD_CHAINGUN);
+		fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
 	}
 
 	// send muzzle flash
@@ -1189,11 +1188,11 @@ void weapon_shotgun_fire (edict_t *ent)
 	vec3_t		start;
 	vec3_t		forward, right;
 	vec3_t		offset;
-	int			damage = 4;
-	int			kick = 8;
+	int			damage = 1;
+	int			kick = 20;
 
-	
-	if (ent->client->ps.gunframe == 9)
+	//recoil count
+	if (ent->client->ps.gunframe == 3)
 	{
 		ent->client->ps.gunframe++;
 		return;
@@ -1212,11 +1211,12 @@ void weapon_shotgun_fire (edict_t *ent)
 		damage *= 4;
 		kick *= 4;
 	}
+
 	//spryszynski reduced spread
 	if (deathmatch->value)
-		fire_shotgun (ent, start, forward, damage, kick, 100, 100, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
+		fire_shotgun (ent, start, forward, damage, kick, 600, 600, 8, MOD_SHOTGUN);
 	else
-		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
+		fire_shotgun (ent, start, forward, damage, kick, 600, 600, 8, MOD_SHOTGUN);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1233,19 +1233,17 @@ void weapon_shotgun_fire (edict_t *ent)
 
 void Weapon_Shotgun (edict_t *ent)
 {
-	//spryszynski removing frames does nothing
-	//static int	pause_frames[]	= {22, 28, 34, 0};
-	//static int	fire_frames[]	= {8, 9, 0};
+	//spryszynski shotgun firerate
+	static int	pause_frames[]	= {22, 28, 34, 0};
+	static int	fire_frames[]	= {8, 9, 0};
 
-	//Weapon_Generic (ent, 7, 18, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
-	static int	pause_frames[]	= {23, 34, 0};
-	static int	fire_frames[]	= {4, 5, 0};
+	Weapon_Generic (ent, 8, 9, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
 
-	Weapon_Generic (ent, 7, 18, 36, 39, pause_frames, fire_frames, weapon_shotgun_fire);
-	gi.dprintf("removed frames\n");
+	//gi.dprintf("removed frames\n");
 }
 
-
+//original supershotgun hidden here
+/*
 void weapon_supershotgun_fire (edict_t *ent)
 {
 	vec3_t		start;
@@ -1273,10 +1271,12 @@ void weapon_supershotgun_fire (edict_t *ent)
 	v[YAW]   = ent->client->v_angle[YAW] - 5;
 	v[ROLL]  = ent->client->v_angle[ROLL];
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	//set fire rate directly
+	fire_shotgun (ent, start, forward, damage, kick, 150, 150, DEFAULT_SSHOTGUN_COUNT, MOD_SSHOTGUN);
 	v[YAW]   = ent->client->v_angle[YAW] + 5;
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	//looke why do I need this
+	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT, MOD_SSHOTGUN);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1287,8 +1287,58 @@ void weapon_supershotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
+	//spryszynski ammo used from 2 to 3
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		ent->client->pers.inventory[ent->client->ammo_index] -= 2;
+		ent->client->pers.inventory[ent->client->ammo_index] -= 3;
+}
+*/
+
+void weapon_supershotgun_fire (edict_t *ent)
+{
+	vec3_t		start;
+	vec3_t		forward, right;
+	vec3_t		offset;
+	int			damage = 8;
+	int			kick = 200;
+
+	//recoil count
+	if (ent->client->ps.gunframe == 3)
+	{
+		ent->client->ps.gunframe++;
+		return;
+	}
+
+	AngleVectors (ent->client->v_angle, forward, right, NULL);
+
+	VectorScale (forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -2;
+
+	VectorSet(offset, 0, 8,  ent->viewheight-8);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+	if (is_quad)
+	{
+		damage *= 4;
+		kick *= 4;
+	}
+	//spryszynski reduced spread
+	if (deathmatch->value)
+		fire_shotgun (ent, start, forward, damage, kick, 175, 100, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
+	else
+		fire_shotgun (ent, start, forward, damage, kick, 175, 175, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
+
+	// send muzzle flash
+	gi.WriteByte (svc_muzzleflash);
+	gi.WriteShort (ent-g_edicts);
+	gi.WriteByte (MZ_SHOTGUN | is_silenced);
+	gi.multicast (ent->s.origin, MULTICAST_PVS);
+
+	ent->client->ps.gunframe++;
+	PlayerNoise(ent, start, PNOISE_WEAPON);
+
+	//ammo -3
+	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		ent->client->pers.inventory[ent->client->ammo_index]-=3;
 }
 
 void Weapon_SuperShotgun (edict_t *ent)
