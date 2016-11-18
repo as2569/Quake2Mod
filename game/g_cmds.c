@@ -425,7 +425,7 @@ void Cmd_Use_f (edict_t *ent)
 /*
 ==================
 Cmd_Drop_f
-
+Looke
 Drop an inventory item
 ==================
 */

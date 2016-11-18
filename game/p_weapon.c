@@ -28,7 +28,7 @@ static byte		is_silenced;
 
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
-
+void Drop_Weapon (edict_t *ent, gitem_t *item);
 
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {
@@ -165,7 +165,7 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 
 /*
 ===============
-ChangeWeapon
+Spryszynski ChangeWeapon
 
 The old weapon has been dropped all the way, so make the new one
 current
@@ -270,6 +270,15 @@ void NoAmmoWeaponChange (edict_t *ent)
 		return;
 	}
 	ent->client->newweapon = FindItem ("blaster");
+
+	//spryszynski if last weapon was bfg, drop it
+	//here here
+	Com_Printf ("point1");
+	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
+	{
+		Com_Printf ("point2");
+		Drop_Weapon(ent, ent->client->pers.lastweapon);
+	}
 }
 
 /*
@@ -342,6 +351,7 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 
 
 /*
+//looke drop weapon
 ================
 Drop_Weapon
 ================
@@ -480,6 +490,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 					gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
 					ent->pain_debounce_time = level.time + 1;
 				}
+				//looke disable no ammo weapon change
 				NoAmmoWeaponChange (ent);
 			}
 		}
@@ -814,9 +825,11 @@ BLASTER / HYPERBLASTER
 
 void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, int effect)
 {
+
 	vec3_t	forward, right;
 	vec3_t	start;
 	vec3_t	offset;
+	
 
 	if (is_quad)
 		damage *= 4;
@@ -997,8 +1010,8 @@ void Machinegun_Fire (edict_t *ent)
 	ent->client->kick_origin[0] = crandom() * 0.35;
 	ent->client->kick_angles[0] = ent->client->machinegun_shots * -1.5;
 
-	//spryszynski 
-	//code to disable deathmatch check for recoil
+	//spryszynski code to disable deathmatch check for recoil
+
 	//raise the gun as it is firing
 
 		//recoil limited to 12 shots
@@ -1423,6 +1436,7 @@ BFG10K
 
 ======================================================================
 */
+//spryszynski original BFG
 
 void weapon_bfg_fire (edict_t *ent)
 {

@@ -497,9 +497,9 @@ typedef struct
 } pmove_state_t;
 
 
-//
-// button bits
-//
+
+
+//looke button bits
 #define	BUTTON_ATTACK		1
 #define	BUTTON_USE			2
 #define	BUTTON_ANY			128			// any key whatsoever

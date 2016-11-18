@@ -186,7 +186,8 @@ void InitGame (void)
 	spectator_password = gi.cvar ("spectator_password", "", CVAR_USERINFO);
 	filterban = gi.cvar ("filterban", "1", 0);
 
-	g_select_empty = gi.cvar ("g_select_empty", "0", CVAR_ARCHIVE);
+	//spryszynski allow empty weapons
+	g_select_empty = gi.cvar ("g_select_empty", "1", CVAR_ARCHIVE);
 
 	run_pitch = gi.cvar ("run_pitch", "0.002", 0);
 	run_roll = gi.cvar ("run_roll", "0.005", 0);

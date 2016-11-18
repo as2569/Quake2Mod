@@ -411,6 +411,7 @@ Parses an edict out of the given string, returning the new position
 ed should be a properly initialized empty edict.
 ====================
 */
+
 char *ED_ParseEdict (char *data, edict_t *ent)
 {
 	qboolean	init;
@@ -512,8 +513,7 @@ void G_FindTeams (void)
 /*
 ==============
 SpawnEntities
-
-Creates a server's entity / program execution context by
+//looke Creates a server's entity / program execution context by
 parsing textual entity definitions out of an ent file.
 ==============
 */
@@ -850,8 +850,9 @@ void SP_worldspawn (edict_t *ent)
 	gi.imageindex ("help");
 	gi.imageindex ("field_3");
 
+	//spryszynski gravity default is 800
 	if (!st.gravity)
-		gi.cvar_set("sv_gravity", "800");
+		gi.cvar_set("sv_gravity", "400");
 	else
 		gi.cvar_set("sv_gravity", st.gravity);
 

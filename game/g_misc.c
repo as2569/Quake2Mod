@@ -864,7 +864,6 @@ void SP_func_explosive (edict_t *self)
 	gi.linkentity (self);
 }
 
-//spryszynski looke
 /*QUAKED misc_explobox (0 .5 .8) (-16 -16 0) (16 16 40)
 Large exploding box.  You can override its mass (100),
 health (80), and dmg (150).
@@ -993,8 +992,9 @@ void SP_misc_explobox (edict_t *self)
 
 	if (!self->mass)
 		self->mass = 400;
+	//spryszynski barrel health
 	if (!self->health)
-		self->health = 10;
+		self->health = 1000;
 	if (!self->dmg)
 		self->dmg = 150;
 

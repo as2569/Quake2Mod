@@ -339,6 +339,7 @@ void CL_FinishMove (usercmd_t *cmd)
 		cmd->buttons |= BUTTON_ATTACK;
 	in_attack.state &= ~2;
 	
+//spryszynski button use
 	if (in_use.state & 3)
 		cmd->buttons |= BUTTON_USE;
 	in_use.state &= ~2;

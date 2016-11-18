@@ -839,7 +839,7 @@ static void drop_make_touchable (edict_t *ent)
 		ent->think = G_FreeEdict;
 	}
 }
-
+//looke drop item
 edict_t *Drop_Item (edict_t *ent, gitem_t *item)
 {
 	edict_t	*dropped;
@@ -1130,7 +1130,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 }
 
 //======================================================================
-
+//looke item list
 gitem_t	itemlist[] = 
 {
 	{

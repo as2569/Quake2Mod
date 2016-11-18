@@ -181,7 +181,7 @@ typedef enum
 #define PNOISE_WEAPON			1
 #define PNOISE_IMPACT			2
 
-
+//looke physics 
 // edict->movetype values
 typedef enum
 {
@@ -246,7 +246,7 @@ typedef struct gitem_s
 	// client side info
 	char		*icon;
 	char		*pickup_name;	// for printing on pickup
-	int			count_width;		// number of digits to display by icon
+	int			count_width;	// number of digits to display by icon
 
 	int			quantity;		// for ammo how much, for weapons how much is used per shot
 	char		*ammo;			// for weapons
@@ -413,6 +413,7 @@ typedef struct
 	void		(*endfunc)(edict_t *self);
 } mmove_t;
 
+//looke ai flags
 typedef struct
 {
 	mmove_t		*currentmove;
@@ -603,8 +604,9 @@ void Cmd_Help_f (edict_t *ent);
 void Cmd_Score_f (edict_t *ent);
 
 //
-// g_items.c
-//
+//g_items.c
+//spryszynski items
+
 void PrecacheItem (gitem_t *it);
 void InitItems (void);
 void SetItemNames (void);
@@ -655,8 +657,9 @@ qboolean OnSameTeam (edict_t *ent1, edict_t *ent2);
 qboolean CanDamage (edict_t *targ, edict_t *inflictor);
 void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir, vec3_t point, vec3_t normal, int damage, int knockback, int dflags, int mod);
 void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_t *ignore, float radius, int mod);
-//looke
-// damage flags
+
+//spryszynski looke damage and weapon flags
+
 #define DAMAGE_RADIUS			0x00000001	// damage was indirect
 #define DAMAGE_NO_ARMOR			0x00000002	// armour does not protect from this damage
 #define DAMAGE_ENERGY			0x00000004	// damage is from an energy based weapon
@@ -669,8 +672,8 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 #define DEFAULT_SHOTGUN_HSPREAD	1000
 #define DEFAULT_SHOTGUN_VSPREAD	500
 #define DEFAULT_DEATHMATCH_SHOTGUN_COUNT	12
-#define DEFAULT_SHOTGUN_COUNT	12
-#define DEFAULT_SSHOTGUN_COUNT	20
+#define DEFAULT_SHOTGUN_COUNT	6
+#define DEFAULT_SSHOTGUN_COUNT	10
 
 //
 // g_monster.c
@@ -704,7 +707,7 @@ void BecomeExplosion1(edict_t *self);
 
 //
 // g_ai.c
-//
+//looke AI
 void AI_SetSightClient (void);
 
 void ai_stand (edict_t *self, float dist);
@@ -1041,6 +1044,7 @@ struct edict_s
 	void		(*prethink) (edict_t *ent);
 	void		(*think)(edict_t *self);
 	void		(*blocked)(edict_t *self, edict_t *other);	//move to moveinfo?
+	//spryszynski touch
 	void		(*touch)(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
 	void		(*use)(edict_t *self, edict_t *other, edict_t *activator);
 	void		(*pain)(edict_t *self, edict_t *other, float kick, int damage);
