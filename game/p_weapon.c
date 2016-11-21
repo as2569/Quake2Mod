@@ -166,7 +166,7 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 /*
 ===============
 Spryszynski ChangeWeapon
-
+here here
 The old weapon has been dropped all the way, so make the new one
 current
 ===============
@@ -174,7 +174,7 @@ current
 void ChangeWeapon (edict_t *ent)
 {
 	int i;
-
+	
 	if (ent->client->grenade_time)
 	{
 		ent->client->grenade_time = level.time;
@@ -224,6 +224,13 @@ void ChangeWeapon (edict_t *ent)
 			ent->client->anim_end = FRAME_pain304;
 			
 	}
+
+	Com_Printf ("changed weapon");
+	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
+	{
+		Com_Printf ("point1");
+		Drop_Weapon(ent, FindItem("BFG10K"));
+	}
 }
 
 /*
@@ -233,6 +240,12 @@ NoAmmoWeaponChange
 */
 void NoAmmoWeaponChange (edict_t *ent)
 {
+	Com_Printf ("point1");
+	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
+	{
+		Com_Printf ("point1");
+		Drop_Weapon(ent, ent->client->pers.lastweapon);
+	}
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))]
 		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("railgun"))] )
 	{
@@ -271,14 +284,6 @@ void NoAmmoWeaponChange (edict_t *ent)
 	}
 	ent->client->newweapon = FindItem ("blaster");
 
-	//spryszynski if last weapon was bfg, drop it
-	//here here
-	Com_Printf ("point1");
-	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
-	{
-		Com_Printf ("point2");
-		Drop_Weapon(ent, ent->client->pers.lastweapon);
-	}
 }
 
 /*
@@ -491,7 +496,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 					ent->pain_debounce_time = level.time + 1;
 				}
 				//looke disable no ammo weapon change
-				NoAmmoWeaponChange (ent);
+				//NoAmmoWeaponChange (ent);
 			}
 		}
 		else
@@ -636,7 +641,7 @@ void Weapon_Grenade (edict_t *ent)
 					gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
 					ent->pain_debounce_time = level.time + 1;
 				}
-				NoAmmoWeaponChange (ent);
+				//NoAmmoWeaponChange (ent);
 			}
 			return;
 		}
@@ -899,7 +904,7 @@ void Weapon_HyperBlaster_Fire (edict_t *ent)
 				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
 				ent->pain_debounce_time = level.time + 1;
 			}
-			NoAmmoWeaponChange (ent);
+			//NoAmmoWeaponChange (ent);
 		}
 		else
 		{
@@ -992,7 +997,7 @@ void Machinegun_Fire (edict_t *ent)
 			gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
 			ent->pain_debounce_time = level.time + 1;
 		}
-		NoAmmoWeaponChange (ent);
+		//NoAmmoWeaponChange (ent);
 		return;
 	}
 
@@ -1138,7 +1143,7 @@ void Chaingun_Fire (edict_t *ent)
 			gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
 			ent->pain_debounce_time = level.time + 1;
 		}
-		NoAmmoWeaponChange (ent);
+		//NoAmmoWeaponChange (ent);
 		return;
 	}
 

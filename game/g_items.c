@@ -97,6 +97,7 @@ FindItem
 
 ===============
 */
+//looke 
 gitem_t	*FindItem (char *pickup_name)
 {
 	int		i;

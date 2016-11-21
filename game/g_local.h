@@ -217,7 +217,7 @@ typedef struct
 #define IT_STAY_COOP	8
 #define IT_KEY			16
 #define IT_POWERUP		32
-
+//looke
 // gitem_t->weapmodel for weapons indicates model index
 #define WEAP_BLASTER			1 
 #define WEAP_SHOTGUN			2 
