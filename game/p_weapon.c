@@ -33,7 +33,7 @@ void Drop_Weapon (edict_t *ent, gitem_t *item);
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {
 	vec3_t	_distance;
-
+	//looke 
 	VectorCopy (distance, _distance);
 	if (client->pers.hand == LEFT_HANDED)
 		_distance[1] *= -1;
@@ -114,6 +114,7 @@ void PlayerNoise(edict_t *who, vec3_t where, int type)
 	gi.linkentity (noise);
 }
 
+//spryszynski looke pickup weapon
 
 qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 {
@@ -166,7 +167,6 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 /*
 ===============
 Spryszynski ChangeWeapon
-here here
 The old weapon has been dropped all the way, so make the new one
 current
 ===============
@@ -356,7 +356,6 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 
 
 /*
-//looke drop weapon
 ================
 Drop_Weapon
 ================
@@ -367,6 +366,11 @@ void Drop_Weapon (edict_t *ent, gitem_t *item)
 
 	if ((int)(dmflags->value) & DF_WEAPONS_STAY)
 		return;
+	//spryszynski movetype
+	//item->solid = SOLID_BBOX;
+	//item->movetype = MOVETYPE_STEP;
+	dropped->solid = SOLID_TRIGGER;
+	dropped->movetype = MOVETYPE_TOSS; 
 
 	index = ITEM_INDEX(item);
 	// see if we're already using it
@@ -766,9 +770,7 @@ void Weapon_GrenadeLauncher (edict_t *ent)
 
 /*
 ======================================================================
-
 ROCKET
-
 ======================================================================
 */
 
@@ -1194,11 +1196,9 @@ void Weapon_Chaingun (edict_t *ent)
 
 
 /*
-======================================================================
-
+=====================================================================
 SHOTGUN / SUPERSHOTGUN
-
-======================================================================
+=====================================================================
 */
 
 void weapon_shotgun_fire (edict_t *ent)
@@ -1367,13 +1367,9 @@ void Weapon_SuperShotgun (edict_t *ent)
 	Weapon_Generic (ent, 6, 17, 57, 61, pause_frames, fire_frames, weapon_supershotgun_fire);
 }
 
-
-
 /*
 ======================================================================
-
 RAILGUN
-
 ======================================================================
 */
 
@@ -1436,9 +1432,7 @@ void Weapon_Railgun (edict_t *ent)
 
 /*
 ======================================================================
-
 BFG10K
-
 ======================================================================
 */
 //spryszynski original BFG
@@ -1449,6 +1443,13 @@ void weapon_bfg_fire (edict_t *ent)
 	vec3_t	forward, right;
 	int		damage;
 	float	damage_radius = 1000;
+	//spryszynski can take damage
+	if (!ent->health)
+		ent->health = 1000;
+	ent->takedamage = DAMAGE_YES;
+	//spryszynski movetype and solid
+	ent->solid = SOLID_BBOX;
+	ent->movetype = MOVETYPE_STEP;
 
 	if (deathmatch->value)
 		damage = 200;
@@ -1508,6 +1509,5 @@ void Weapon_BFG (edict_t *ent)
 
 	Weapon_Generic (ent, 8, 32, 55, 58, pause_frames, fire_frames, weapon_bfg_fire);
 }
-
 
 //======================================================================

@@ -240,7 +240,6 @@ typedef struct
 	//
 	// global variables shared between game and server
 	//
-
 	// The edict array is allocated in the game dll so it
 	// can vary in size from one game to another.
 	// 

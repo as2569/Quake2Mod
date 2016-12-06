@@ -217,6 +217,7 @@ typedef struct
 #define IT_STAY_COOP	8
 #define IT_KEY			16
 #define IT_POWERUP		32
+
 //looke
 // gitem_t->weapmodel for weapons indicates model index
 #define WEAP_BLASTER			1 
@@ -631,6 +632,7 @@ qboolean	KillBox (edict_t *ent);
 void	G_ProjectSource (vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result);
 edict_t *G_Find (edict_t *from, int fieldofs, char *match);
 edict_t *findradius (edict_t *from, vec3_t org, float rad);
+//looke
 edict_t *G_PickTarget (char *targetname);
 void	G_UseTargets (edict_t *ent, edict_t *activator);
 void	G_SetMovedir (vec3_t angles, vec3_t movedir);
@@ -723,7 +725,7 @@ qboolean infront (edict_t *self, edict_t *other);
 qboolean visible (edict_t *self, edict_t *other);
 qboolean FacingIdeal(edict_t *self);
 
-//looke weapons?
+//
 // g_weapon.c
 //
 void ThrowDebris (edict_t *self, char *modelname, float speed, vec3_t origin);
@@ -965,7 +967,7 @@ struct gclient_s
 	qboolean	update_chase;		// need to update chase info?
 };
 
-
+//looke
 struct edict_s
 {
 	entity_state_t	s;

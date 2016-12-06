@@ -661,7 +661,7 @@ void SP_func_wall (edict_t *self)
 /*QUAKED func_object (0 .5 .8) ? TRIGGER_SPAWN ANIMATED ANIMATED_FAST
 This is solid bmodel that will fall if it's support it removed.
 */
-
+//looke object 
 void func_object_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	// only squash thing we fall on top of
@@ -864,6 +864,7 @@ void SP_func_explosive (edict_t *self)
 	gi.linkentity (self);
 }
 
+//looke exploding box
 /*QUAKED misc_explobox (0 .5 .8) (-16 -16 0) (16 16 40)
 Large exploding box.  You can override its mass (100),
 health (80), and dmg (150).
@@ -969,7 +970,7 @@ void barrel_delay (edict_t *self, edict_t *inflictor, edict_t *attacker, int dam
 	self->think = barrel_explode;
 	self->activator = attacker;
 }
-//spryszynski I think its barrel
+
 void SP_misc_explobox (edict_t *self)
 {
 	if (deathmatch->value)

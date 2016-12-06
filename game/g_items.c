@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 
-
+qboolean	Pickup_Cube (edict_t *ent, edict_t *other);
 qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
 void		Use_Weapon (edict_t *ent, gitem_t *inv);
 void		Drop_Weapon (edict_t *ent, gitem_t *inv);
@@ -553,7 +553,7 @@ void MegaHealth_think (edict_t *self)
 	else
 		G_FreeEdict (self);
 }
-
+//looke health pickup
 qboolean Pickup_Health (edict_t *ent, edict_t *other)
 {
 	if (!(ent->style & HEALTH_IGNORE_MAX))
@@ -1516,7 +1516,7 @@ always owned, never in the world
 		0,
 /* precache */ "weapons/rg_hum.wav"
 	},
-
+//spryszynski looke
 /*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
@@ -1526,13 +1526,15 @@ always owned, never in the world
 		Drop_Weapon,
 		Weapon_BFG,
 		"misc/w_pkup.wav",
-		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
+		//spryszynski world flag to null
+		"models/weapons/g_bfg/tris.md2", NULL,
 		"models/weapons/v_bfg/tris.md2",
 /* icon */		"w_bfg",
 /* pickup */	"BFG10K",
 		0,
 		50,
-		"Cells",
+		//change "Cells" to null
+		NULL,
 		IT_WEAPON|IT_STAY_COOP,
 		WEAP_BFG,
 		NULL,
