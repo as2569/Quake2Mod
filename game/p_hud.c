@@ -301,6 +301,9 @@ Draw help computer.
 */
 void HelpComputer (edict_t *ent)
 {
+	char mod[] = "Keep cube alive.\n"
+				 "Switching out of the.\n" 
+				 "cube drops it\n";
 	char	string[1024];
 	char	*sk;
 
@@ -313,19 +316,22 @@ void HelpComputer (edict_t *ent)
 	else
 		sk = "hard+";
 
+
 	// send the layout
 	Com_sprintf (string, sizeof(string),
+		//change 32 to 40
 		"xv 32 yv 8 picn help "			// background
 		"xv 202 yv 12 string2 \"%s\" "		// skill
 		"xv 0 yv 24 cstring2 \"%s\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
 		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		"xv 50 yv 164 string2 \" kills     cube     range\" "
 		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
 		sk,
 		level.level_name,
 		game.helpmessage1,
-		game.helpmessage2,
+		mod,
+		//game.helpmessage2,
 		level.killed_monsters, level.total_monsters, 
 		level.found_goals, level.total_goals,
 		level.found_secrets, level.total_secrets);

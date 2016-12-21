@@ -29,6 +29,7 @@ static byte		is_silenced;
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 void Drop_Weapon (edict_t *ent, gitem_t *item);
+void Drop_BFG (edict_t *ent, gitem_t *item);
 
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {
@@ -221,15 +222,13 @@ void ChangeWeapon (edict_t *ent)
 	else
 	{
 			ent->s.frame = FRAME_pain301;
-			ent->client->anim_end = FRAME_pain304;
-			
+			ent->client->anim_end = FRAME_pain304;		
 	}
 
-	Com_Printf ("changed weapon");
 	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
 	{
-		Com_Printf ("point1");
-		Drop_Weapon(ent, FindItem("BFG10K"));
+		//spryszynski change this to drop bfg
+		Drop_BFG(ent, FindItem("BFG10K"));
 	}
 }
 
@@ -240,11 +239,10 @@ NoAmmoWeaponChange
 */
 void NoAmmoWeaponChange (edict_t *ent)
 {
-	Com_Printf ("point1");
 	if(ent->client->pers.lastweapon == FindItem("BFG10K"))
 	{
-		Com_Printf ("point1");
-		Drop_Weapon(ent, ent->client->pers.lastweapon);
+		//change to drop bfg
+		Drop_BFG(ent, ent->client->pers.lastweapon);
 	}
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))]
 		&&  ent->client->pers.inventory[ITEM_INDEX(FindItem("railgun"))] )
@@ -318,7 +316,6 @@ void Think_Weapon (edict_t *ent)
 /*
 ================
 Use_Weapon
-
 Make the weapon ready if there is ammo
 ================
 */
@@ -353,9 +350,8 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 	ent->client->newweapon = item;
 }
 
-
-
-/*
+/* 
+looke drop weapon
 ================
 Drop_Weapon
 ================
@@ -366,11 +362,6 @@ void Drop_Weapon (edict_t *ent, gitem_t *item)
 
 	if ((int)(dmflags->value) & DF_WEAPONS_STAY)
 		return;
-	//spryszynski movetype
-	//item->solid = SOLID_BBOX;
-	//item->movetype = MOVETYPE_STEP;
-	dropped->solid = SOLID_TRIGGER;
-	dropped->movetype = MOVETYPE_TOSS; 
 
 	index = ITEM_INDEX(item);
 	// see if we're already using it
@@ -384,6 +375,25 @@ void Drop_Weapon (edict_t *ent, gitem_t *item)
 	ent->client->pers.inventory[index]--;
 }
 
+void Drop_BFG (edict_t *ent, gitem_t *item)
+{
+	int		index;
+
+	if ((int)(dmflags->value) & DF_WEAPONS_STAY)
+		return;
+
+	index = ITEM_INDEX(item);
+	// see if we're already using it
+	if ( ((item == ent->client->pers.weapon) || (item == ent->client->newweapon))&& (ent->client->pers.inventory[index] == 1) )
+	{
+		gi.cprintf (ent, PRINT_HIGH, "Can't drop current weapon\n");
+		return;
+	}
+
+	Drop_Cube (ent, item);
+	ent->client->pers.inventory[index]--;
+	Com_Printf("dropped BFG");
+}
 
 /*
 ================
@@ -1293,7 +1303,6 @@ void weapon_supershotgun_fire (edict_t *ent)
 	fire_shotgun (ent, start, forward, damage, kick, 150, 150, DEFAULT_SSHOTGUN_COUNT, MOD_SSHOTGUN);
 	v[YAW]   = ent->client->v_angle[YAW] + 5;
 	AngleVectors (v, forward, NULL, NULL);
-	//looke why do I need this
 	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT, MOD_SSHOTGUN);
 
 	// send muzzle flash
@@ -1443,13 +1452,6 @@ void weapon_bfg_fire (edict_t *ent)
 	vec3_t	forward, right;
 	int		damage;
 	float	damage_radius = 1000;
-	//spryszynski can take damage
-	if (!ent->health)
-		ent->health = 1000;
-	ent->takedamage = DAMAGE_YES;
-	//spryszynski movetype and solid
-	ent->solid = SOLID_BBOX;
-	ent->movetype = MOVETYPE_STEP;
 
 	if (deathmatch->value)
 		damage = 200;

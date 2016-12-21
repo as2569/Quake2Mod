@@ -23,6 +23,8 @@ qboolean	Pickup_Cube (edict_t *ent, edict_t *other);
 qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
 void		Use_Weapon (edict_t *ent, gitem_t *inv);
 void		Drop_Weapon (edict_t *ent, gitem_t *inv);
+void		Drop_BFG (edict_t *ent, gitem_t *inv);
+
 
 void Weapon_Blaster (edict_t *ent);
 void Weapon_Shotgun (edict_t *ent);
@@ -759,6 +761,20 @@ void Drop_PowerArmor (edict_t *ent, gitem_t *item)
 Touch_Item
 ===============
 */
+void cube_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+
+{
+	float	ratio;
+	vec3_t	v;
+
+	if ((!other->groundentity) || (other->groundentity == self))
+		return;
+
+	ratio = (float)other->mass / (float)self->mass;
+	VectorSubtract (self->s.origin, other->s.origin, v);
+	M_walkmove (self, vectoyaw(v), 20 * ratio * FRAMETIME);
+}
+
 void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	qboolean	taken;
@@ -825,21 +841,14 @@ void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf
 
 static void drop_temp_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	if (other == ent->owner)
-		return;
-
 	Touch_Item (ent, other, plane, surf);
 }
 
 static void drop_make_touchable (edict_t *ent)
 {
 	ent->touch = Touch_Item;
-	if (deathmatch->value)
-	{
-		ent->nextthink = level.time + 29;
-		ent->think = G_FreeEdict;
-	}
 }
+
 //looke drop item
 edict_t *Drop_Item (edict_t *ent, gitem_t *item)
 {
@@ -890,6 +899,61 @@ edict_t *Drop_Item (edict_t *ent, gitem_t *item)
 	return dropped;
 }
 
+//spryszynski clone of drop item for BFG cube
+//here here
+
+edict_t *Drop_Cube (edict_t *ent, gitem_t *item)
+{
+	edict_t	*dropped;
+	vec3_t	forward, right;
+	vec3_t	offset;
+
+	dropped = G_Spawn();
+
+	dropped->classname = item->classname;
+	dropped->item = item;
+	//dropped->spawnflags = DROPPED_ITEM;
+	dropped->takedamage = DAMAGE_YES;
+	dropped->health = 1000;
+	dropped->s.effects = item->world_model_flags;
+	dropped->s.renderfx = RF_GLOW;
+	VectorSet (dropped->mins, -15, -15, -15);
+	VectorSet (dropped->maxs, 15, 15, 15);
+	gi.setmodel (dropped, dropped->item->world_model);
+	dropped->solid = SOLID_BBOX;
+	dropped->movetype = MOVETYPE_STEP; 
+	dropped->touch = cube_touch;
+	dropped->owner = ent;
+
+	if (ent->client)
+	{
+		trace_t	trace;
+
+		AngleVectors (ent->client->v_angle, forward, right, NULL);
+		VectorSet(offset, 24, 0, -16);
+		G_ProjectSource (ent->s.origin, offset, forward, right, dropped->s.origin);
+		trace = gi.trace (ent->s.origin, dropped->mins, dropped->maxs,
+			dropped->s.origin, ent, CONTENTS_SOLID);
+		VectorCopy (trace.endpos, dropped->s.origin);
+	}
+	else
+	{
+		AngleVectors (ent->s.angles, forward, right, NULL);
+		VectorCopy (ent->s.origin, dropped->s.origin);
+	}
+
+	VectorScale (forward, 100, dropped->velocity);
+	dropped->velocity[2] = 300;
+
+	dropped->think = drop_make_touchable;
+	dropped->nextthink = level.time + 1;
+
+	gi.linkentity (dropped);
+
+	return dropped;
+}
+
+
 void Use_Item (edict_t *ent, edict_t *other, edict_t *activator)
 {
 	ent->svflags &= ~SVF_NOCLIENT;
@@ -933,6 +997,7 @@ void droptofloor (edict_t *ent)
 		gi.setmodel (ent, ent->item->world_model);
 	ent->solid = SOLID_TRIGGER;
 	ent->movetype = MOVETYPE_TOSS;  
+
 	ent->touch = Touch_Item;
 
 	v = tv(0,0,-128);
@@ -1523,7 +1588,7 @@ always owned, never in the world
 		"weapon_bfg",
 		Pickup_Weapon,
 		Use_Weapon,
-		Drop_Weapon,
+		Drop_BFG,
 		Weapon_BFG,
 		"misc/w_pkup.wav",
 		//spryszynski world flag to null
